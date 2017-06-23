@@ -1,28 +1,37 @@
-#include <QCoreApplication>
-#include <QDebug>
+#include <QTextCodec>
+#include <QString>
+#include <iostream>
 #include "vl/generic.h"
 #include "vl/info1cd.h"
 
 int main(int argc, char *argv[])
 {
-        QCoreApplication app(argc, argv);
+        Q_UNUSED(argc);
+        Q_UNUSED(argv);
+
+        QTextCodec *outcodec = QTextCodec::codecForName("CP866");
 
         QString fileName = "c:/dev/1CBases/1/1Cv8.1CD";
         vl::Info1Cd db(fileName);
         if (!db.readStructureBase()) {
-                qDebug() << "ERROR!";
+                std::cerr << "Error!" << endl;
                 return -1;
         }
 
-        qDebug() << "ConfigName: " << db.getConfigName();
-        qDebug() << "ConfigVersion: " << db.getConfigVersion();
-        qDebug() << "TableCount: " << db.getTableCount();
-        qDebug() << "FileSize: " << vl::getFileSizeStr(db.getFileSize(), "auto", true);
-        qDebug() << "FormatVersion: " << db.getFormatVersionStr();
-        qDebug() << "BlockSize: " << db.getBlockSize();
-        qDebug() << "Locale: " << db.getLocale();
-        qDebug() << "Modified: " << db.getIsModified();
-        qDebug() << "UpdateNotCompleted: " << db.getUpdateNotCompleted();
+        std::string isModified;
+        isModified = db.getIsModified() ? "yes" : "no";
+        std::string updateIsCompleted;
+        updateIsCompleted = db.getUpdateNotCompleted() ? "yes" : "no";
 
-        return app.exec();
+        std::cout << "ConfigName: " << outcodec->fromUnicode(db.getConfigName()).constData() << std::endl;
+        std::cout << "ConfigVersion: " << outcodec->fromUnicode(db.getConfigVersion()).constData() << std::endl;
+        std::cout << "Modified: " << isModified << std::endl;
+        std::cout << "UpdateNotCompleted: " << updateIsCompleted << std::endl;
+        std::cout << "FormatVersion: " << outcodec->fromUnicode(db.getFormatVersionStr()).constData() << std::endl;
+        std::cout << "BlockSize: " << db.getBlockSize() << std::endl;
+        std::cout << "TableCount: " << db.getTableCount() << std::endl;
+        std::cout << "Locale: " << outcodec->fromUnicode(db.getLocale()).constData() << std::endl;
+        std::cout << "FileSize: " << outcodec->fromUnicode(vl::getFileSizeStr(db.getFileSize(), "Mb", true)).constData() << std::endl;
+
+        return 0;
 }

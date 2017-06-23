@@ -108,7 +108,7 @@ QString getFileSizeStr(double len, const QString unit, bool showUnit,
                 fileSizeStr = tmp;
         }
         if (showUnit) {
-                fileSizeStr.append(" " + unitTmp);
+                fileSizeStr.append(/*" " + */unitTmp);
         }
         return fileSizeStr;
 }
