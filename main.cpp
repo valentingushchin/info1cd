@@ -12,9 +12,11 @@ int main(int argc, char *argv[])
         QTextCodec *outcodec = QTextCodec::codecForName("CP866");
 
         QString fileName = "c:/dev/1CBases/1/1Cv8.1CD";
+//        QString fileName = "d:/1/1Cv8.1CD";
+
         vl::Info1Cd db(fileName);
         if (!db.readStructureBase()) {
-                std::cerr << "Error!" << endl;
+                std::cerr << "Error!" << std::endl;
                 return -1;
         }
 
