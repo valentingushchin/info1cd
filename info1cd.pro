@@ -50,4 +50,6 @@ DISTFILES += \
     zlib/lib/zlib.lib \
     zlib/lib/zlibd.lib \
     zlib/lib/zlib.dll \
+    zlib/lib/zlibd.dll \
+    zlib/lib/zlib.dll \
     zlib/lib/zlibd.dll
