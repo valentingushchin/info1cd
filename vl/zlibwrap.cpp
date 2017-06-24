@@ -46,33 +46,32 @@ bool ZlibWrap::unCompress(const QByteArray &source, QByteArray &destination) con
 	return true;
 }
 
-bool ZlibWrap::unCompressRaw(QByteArray source, QByteArray &destination) const
+bool ZlibWrap::unCompressRaw(QByteArray &source, QByteArray &destination) const
 {
-	QByteArray header;
+	QByteArray buffer;
 	const quint8 a = 0x78;
 	const quint8 b = 0x9C;
-	header.append(a);
-	header.append(b);
-
-	source.prepend(header);
+	buffer.append(a);
+	buffer.append(b);
+	buffer.append(source);
 
 	destination.clear();
-	uLong  sourceSize = static_cast<uLongf>(source.count());
+	uLong  sourceSize = static_cast<uLongf>(buffer.count());
 	uLongf destinationSize = bufferLength;
 
 	destination.resize(static_cast<int>(destinationSize));
 
-	const Bytef *in = reinterpret_cast<const Bytef*>(source.data());
+	Bytef *in = reinterpret_cast<Bytef*>(buffer.data());
 	Bytef *out = reinterpret_cast<Bytef*>(destination.data());
 
 	z_stream stream;
 	stream.zalloc = Z_NULL;
 	stream.zfree =  Z_NULL;
 	stream.opaque = Z_NULL;
-	stream.avail_in =  (uInt)sourceSize;
-	stream.next_in  =  (Bytef*)in;
-	stream.avail_out = (uInt)destinationSize;
-	stream.next_out =  (Bytef*)out;
+	stream.avail_in =  static_cast<uInt>(sourceSize);
+	stream.next_in  =  static_cast<Bytef*>(in);
+	stream.avail_out = static_cast<uInt>(destinationSize);
+	stream.next_out =  static_cast<Bytef*>(out);
 
 	int result = inflateInit(&stream);
 	if (result != Z_OK) {

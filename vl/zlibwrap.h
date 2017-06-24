@@ -14,12 +14,12 @@ public:
 	bool compress(const QByteArray &source, QByteArray &destination,
 		      int level = Z_DEFAULT_COMPRESSION) const;
 	bool unCompress(const QByteArray &source, QByteArray &destination) const;
-	bool unCompressRaw(QByteArray source, QByteArray &destination) const;
+	bool unCompressRaw(QByteArray &source, QByteArray &destination) const;
 
 	ZlibWrap();
 
 private:
-	uLong bufferLength = 1048576;
+	int bufferLength = 5000000;
 };
 
 } // end namespace vl

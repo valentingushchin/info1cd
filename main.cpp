@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	QTextCodec *outcodec = QTextCodec::codecForName("CP866");
 
-	QString fileName = "c:/dev/1CBases/5/1Cv8.1CD";
+	QString fileName = "c:/dev/1CBases/4/1Cv8.1CD";
 //        QString fileName = "d:/1/1Cv8.1CD";
 
 	vl::Info1Cd db(fileName);
