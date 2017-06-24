@@ -6,8 +6,6 @@
 
 #include "zlib.h"
 
-//#define CHUNK 16384
-
 namespace vl {
 
 class ZlibWrap
