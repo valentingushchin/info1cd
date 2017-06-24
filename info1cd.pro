@@ -24,7 +24,6 @@ CONFIG(debug, debug|release) {
 SOURCES += main.cpp \
     vl/generic.cpp \
     vl/info1cd.cpp \
-    vl/zlibwrap.cpp \
     vl/cache.cpp
 
 # The following define makes your compiler emit warnings if you use
@@ -41,7 +40,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     vl/generic.h \
     vl/info1cd.h \
-    vl/zlibwrap.h \
     zlib/include/zconf.h \
     zlib/include/zlib.h \
     vl/cache.h

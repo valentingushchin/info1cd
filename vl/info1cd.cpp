@@ -919,9 +919,8 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
 	}
 
 	QByteArray out;
-	ZlibWrap zw;
 
-	if (!zw.unCompressRaw(binary, out)) {
+	if (!unCompressRaw(binary, out)) {
 		return false;
 	}
 
@@ -978,7 +977,7 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
 		return false;
 	}
 
-	if (!zw.unCompressRaw(binary, out)) {
+	if (!unCompressRaw(binary, out)) {
 		return false;
 	}
 

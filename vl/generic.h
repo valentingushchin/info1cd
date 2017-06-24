@@ -3,16 +3,15 @@
 
 #include <QString>
 #include <QTextStream>
-#include <QTime>
-#include <random>
+#include "zlib.h"
 
 namespace vl {
 
-QString uuidGen();
+bool unCompressRaw(QByteArray &source, QByteArray &destination);
 
 // unit: "", "Kb", "Mb", "Gb", "Tb"
 QString getFileSizeStr(double len, const QString unit = "", bool showUnit = false,
-                       bool separate = true, int precision = 3);
+		       bool separate = true, int precision = 3);
 
 inline quint16 makeUint16(const QByteArray &block, quint32 offset)
 {
