@@ -80,5 +80,5 @@ int main(int argc, char *argv[])
 		cout << "FileSize: " << vl::getFileSizeStr(db.getFileSize(), "Mb", true) << endl;
 	}
 
-	return app.exec();
+	return 0;
 }
