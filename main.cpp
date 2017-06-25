@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
 	QCommandLineParser parser;
 	parser.setApplicationDescription("\ninfo1cd v1.0 - Trying to find out information about the 1CD file\n"
-					 "Valentin Gushchin (valentingushchin@gmail.com) : 24.06.2017\n"
+					 "Valentin Gushchin : 24.06.2017\n"
 					 "https://github.com/valentingushchin/info1cd");
 	parser.addHelpOption();
 	parser.addVersionOption();

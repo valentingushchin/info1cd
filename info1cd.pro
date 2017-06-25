@@ -9,9 +9,9 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-PROJECTDIR = "C:/dev/vvg/Project/info1cd"
-ZLIB_INCLUDE = $$PROJECTDIR/zlib/include
-ZLIB_LIB = $$PROJECTDIR/zlib/lib
+# Requires the definition of the variable PROJECTDIR
+ZLIB_INCLUDE = $(PROJECTDIR)/zlib/include
+ZLIB_LIB = $(PROJECTDIR)/zlib/lib
 
 INCLUDEPATH += $${ZLIB_INCLUDE}
 
