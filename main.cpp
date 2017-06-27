@@ -4,7 +4,7 @@
 #include <QString>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "vl/generic.h"
+#include "vl/common.h"
 #include "vl/info1cd.h"
 
 int main(int argc, char *argv[])
@@ -44,9 +44,14 @@ int main(int argc, char *argv[])
 		parser.showHelp(-100);
 	}
 
-	QString fileName = args.at(0);
+        QTextStream cerr(stderr);
 
-	QTextStream cerr(stderr);
+        if (args.count() > 1) {
+                cerr << "Too many positional arguments" << endl;
+                return -200;
+        }
+
+	QString fileName = args.at(0);
 
 	vl::Info1Cd db(fileName);
 	if (!db.readStructureBase()) {
@@ -59,13 +64,13 @@ int main(int argc, char *argv[])
         QTextStream cout(stdout);
 
         if (enc == "UTF-8") {
-                cout.setCodec("UTF8");
+                cout.setCodec("UTF-8");
         } else if (enc == "CP-1251") {
-                cout.setCodec("CP1251");
+                cout.setCodec("CP-1251");
         } else if ((enc == "CP-866") || enc.isEmpty()) {
-                cout.setCodec("CP866");
+                cout.setCodec("CP-866");
         } else {
-                parser.showHelp(-200);
+                parser.showHelp(-300);
         }
 
 	if (jsonFormat) {

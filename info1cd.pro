@@ -22,9 +22,9 @@ CONFIG(debug, debug|release) {
 }
 
 SOURCES += main.cpp \
-    vl/generic.cpp \
     vl/info1cd.cpp \
-    vl/cache.cpp
+    vl/cache.cpp \
+    vl/common.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -38,11 +38,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    vl/generic.h \
     vl/info1cd.h \
     zlib/include/zconf.h \
     zlib/include/zlib.h \
-    vl/cache.h
+    vl/cache.h \
+    vl/common.h
 
 DISTFILES += \
     zlib/lib/zlib.lib \

@@ -8,7 +8,7 @@
 #include <QString>
 #include <QRegularExpression>
 
-#include "generic.h"
+#include "common.h"
 #include "cache.h"
 
 namespace vl {
