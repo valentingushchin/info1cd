@@ -603,9 +603,6 @@ quint32 Info1Cd::calculateFieldSize(const QString &fieldType, quint32 fieldLengt
 		size = 1;
 	} else if (fieldType == "N")  {
 		size = (fieldLength + 2) >> 1;
-		if ((fieldLength + 2) % 2) {
-			size++;
-		}
 	} else if (fieldType == "NC") {
 		size = fieldLength << 1;
 	} else if (fieldType == "NVC") {
@@ -619,7 +616,7 @@ quint32 Info1Cd::calculateFieldSize(const QString &fieldType, quint32 fieldLengt
 	} else if (fieldType == "DT") {
 		size = 7;
 	}
-	return size;
+        return size;
 }
 
 bool Info1Cd::parseTable(QString table, quint32 &indexObject,  quint32 &indexBlob, quint32 &recordLength,
@@ -678,7 +675,7 @@ bool Info1Cd::parseTable(QString table, quint32 &indexObject,  quint32 &indexBlo
 	QRegularExpressionMatchIterator i = regExp.globalMatch(tableStr);
 
 	bool fieldTypeRvIsExist = false;
-	recordLength = 0; // length of one table entry
+        recordLength = 1; // length of one table entry
 
 	QString fieldName;
 	QString fieldType;
@@ -717,7 +714,7 @@ bool Info1Cd::parseTable(QString table, quint32 &indexObject,  quint32 &indexBlo
 			filenameFieldLen = fieldSize;
 		}
 		if (fieldName == "BINARYDATA") {
-			binaryDataOffset = recordLength;
+                        binaryDataOffset = recordLength;
 		}
 
 		recordLength += fieldSize;
