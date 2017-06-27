@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationVersion("1.0");
 
 	QCommandLineParser parser;
-	parser.setApplicationDescription("\ninfo1cd v1.0 - Trying to find out information about the 1CD file\n"
-					 "Valentin Gushchin : 24.06.2017\n"
+        parser.setApplicationDescription("\ninfo1cd v1.0 - Trying to find out information about the 1CD file\n\n"
+                                         "Valentin Gushchin : 27.06.2017\n"
 					 "https://github.com/valentingushchin/info1cd");
 	parser.addHelpOption();
 	parser.addVersionOption();
@@ -24,6 +24,13 @@ int main(int argc, char *argv[])
 		    QCoreApplication::translate("main", "Set the output format to json."));
 
 	parser.addOption(jsonOption);
+
+        QCommandLineOption encodingOption(QStringList() << "e" << "encode",
+                    QCoreApplication::translate("main", "Setting the encoding of the output text. \n"
+                                                        "<encoding>: UTF-8, CP-1251, CP-866 (default)."),
+                    QCoreApplication::translate("main", "encoding"));
+
+        parser.addOption(encodingOption);
 
 	parser.addPositionalArgument("source", QCoreApplication::translate("main", "Full path to *.1CD file."));
 
@@ -47,8 +54,19 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	QTextStream cout(stdout);
-	cout.setCodec("CP866");
+        QString enc = parser.value(encodingOption);
+
+        QTextStream cout(stdout);
+
+        if (enc == "UTF-8") {
+                cout.setCodec("UTF8");
+        } else if (enc == "CP-1251") {
+                cout.setCodec("CP1251");
+        } else if ((enc == "CP-866") || enc.isEmpty()) {
+                cout.setCodec("CP866");
+        } else {
+                parser.showHelp(-200);
+        }
 
 	if (jsonFormat) {
 		QJsonObject jso;
