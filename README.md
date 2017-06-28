@@ -13,3 +13,5 @@
 
 Параметр: Имя файла база данных.
 
+![Image alt](https://github.com/valentingushchin/resource/raw/master/images/info1cd.png)
+
