@@ -23,7 +23,6 @@ CONFIG(debug, debug|release) {
 
 SOURCES += main.cpp \
     vl/info1cd.cpp \
-    vl/cache.cpp \
     vl/common.cpp
 
 # The following define makes your compiler emit warnings if you use
@@ -41,7 +40,6 @@ HEADERS += \
     vl/info1cd.h \
     zlib/include/zconf.h \
     zlib/include/zlib.h \
-    vl/cache.h \
     vl/common.h
 
 DISTFILES += \
