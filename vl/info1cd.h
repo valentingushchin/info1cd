@@ -250,9 +250,7 @@ inline bool Cache::put(const QString &key, uint i1, uint i2)
         if (hashContainer.contains(key)) {
                 return false;
         }
-
         hashContainer.insert(key, data(i1, i2));
-
         return true;
 }
 
