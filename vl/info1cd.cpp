@@ -882,11 +882,13 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
         Q_UNUSED(blobLength)
 
         QString rootName = "root";
+        QRegExp doubleGUIDPattern("\\w+-\\w+-\\w+-\\w+-\\w+.\\w+-\\w+-\\w+-\\w+-\\w+");
+        bool doubleGUIDisExists = false;
 
         // search for rootBlobIndex and rootBlobLength for root
         quint64 maxRecordCount = objectLength / recordLength;
 
-        quint32 rootStopCaching = 0;
+        quint32 stopCaching = 0;
 
         for (quint32 i = 0; i < maxRecordCount; ++i) {
                 QString fileName;
@@ -896,9 +898,12 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
                 if (readRecord(indexesObject, i, recordLength, binaryDataOffset, fileName, fBlobIndex, fBlobLength)) {
                         tableBlobInfoCache.put(fileName, fBlobIndex, fBlobLength);
 
-                        if (fileName == rootName) {
+                        if (fileName.contains(doubleGUIDPattern)) {
+                                doubleGUIDisExists = true;
+                        }
 
-                                rootStopCaching = i;
+                        if (fileName == rootName) {
+                                stopCaching = i;
                                 break;
                         }
                 }
@@ -923,9 +928,11 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
 
         // read nextFileName
         QString content = QString::fromUtf8(reinterpret_cast<const char *>(out.data()), out.count());
+
         QRegularExpression regExp;
-        regExp.setPattern("[\"\n\\0 ]");
+        regExp.setPattern("[\"\n\r\\0 ]");
         content = content.remove(regExp);
+
         regExp.setPattern("\\{\\d+,(\\w+-\\w+-\\w+-\\w+-\\w+),(.*)\\}");
         QRegularExpressionMatch match = regExp.match(content);
 
@@ -934,6 +941,7 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
         if (match.hasMatch()) {
                 nextFileName = match.captured(1);
                 isModifiedMarker = match.captured(2);
+
                 if (isModifiedMarker == "") {
                         setIsModified(false);
                 } else {
@@ -949,7 +957,7 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
         quint32 nextStopCaching = 0;
 
         if (!tableBlobInfoCache.get(nextFileName, nextBlobIndex, nextBlobLength)) {
-                for (quint32 i = rootStopCaching + 1; i < maxRecordCount; ++i) {
+                for (quint32 i = stopCaching + 1; i < maxRecordCount; ++i) {
                         QString fileName;
                         uint fBlobIndex = 0;
                         uint fBlobLength = 0;
@@ -957,11 +965,39 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
                         if (readRecord(indexesObject, i, recordLength, binaryDataOffset,
                                        fileName, fBlobIndex, fBlobLength)) {
                                 tableBlobInfoCache.put(fileName, fBlobIndex, fBlobLength);
+
+                                if (fileName.contains(doubleGUIDPattern)) {
+                                        doubleGUIDisExists = true;
+                                }
+
                                 if (fileName == nextFileName) {
                                         nextStopCaching = i;
                                         break;
                                 }
                         }
+                }
+        }
+
+        if (getIsModified()) { // if root is dirty and..
+                if (!doubleGUIDisExists) { // if file GUID.GUID not found
+                        for (quint32 i = stopCaching + 1; i < maxRecordCount; ++i) {
+                                QString fileName;
+                                uint fBlobIndex = 0;
+                                uint fBlobLength = 0;
+
+                                if (readRecord(indexesObject, i, recordLength, binaryDataOffset,
+                                               fileName, fBlobIndex, fBlobLength)) {
+
+                                        if (fileName.contains(doubleGUIDPattern)) {
+                                                doubleGUIDisExists = true;
+                                                break;
+                                        }
+                                }
+                        }
+                }
+
+                if (!doubleGUIDisExists) {
+                        setIsModified(false); // respawn status
                 }
         }
 
@@ -978,12 +1014,12 @@ bool Info1Cd::parseLastStage(const QVector<quint32> &indexesObject, const QVecto
                 return false;
         }
 
-        content = QString::fromUtf8(reinterpret_cast<const char *>(out.data()), out.count());
+        QString lastContent = QString::fromUtf8(reinterpret_cast<const char *>(out.data()), out.count());
 
         QString confName;
         QString confVersion;
 
-        if (!parseInfoBlock(content, confName, confVersion)) {
+        if (!parseInfoBlock(lastContent, confName, confVersion)) {
                 return false;
         }
 
