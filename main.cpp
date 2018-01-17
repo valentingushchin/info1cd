@@ -9,21 +9,21 @@
 
 int main(int argc, char *argv[])
 {
-	QCoreApplication app(argc, argv);
-	QCoreApplication::setApplicationName("info1cd");
-	QCoreApplication::setApplicationVersion("1.0");
+        QCoreApplication app(argc, argv);
+        QCoreApplication::setApplicationName("info1cd");
+        QCoreApplication::setApplicationVersion("1.01");
 
-	QCommandLineParser parser;
-        parser.setApplicationDescription("\ninfo1cd v1.0 - Trying to find out information about the 1CD file\n\n"
-                                         "Valentin Gushchin : 27.06.2017\n"
-					 "https://github.com/valentingushchin/info1cd");
-	parser.addHelpOption();
-	parser.addVersionOption();
+        QCommandLineParser parser;
+        parser.setApplicationDescription("\ninfo1cd v1.01 - Trying to find out information about the 1CD file\n\n"
+                                         "Valentin Gushchin : 17.01.2018\n"
+                                         "https://github.com/valentingushchin/info1cd");
+        parser.addHelpOption();
+        parser.addVersionOption();
 
-	QCommandLineOption jsonOption(QStringList() << "j" << "json",
-		    QCoreApplication::translate("main", "Set the output format to json."));
+        QCommandLineOption jsonOption(QStringList() << "j" << "json",
+                    QCoreApplication::translate("main", "Set the output format to json."));
 
-	parser.addOption(jsonOption);
+        parser.addOption(jsonOption);
 
         QCommandLineOption encodingOption(QStringList() << "e" << "encode",
                     QCoreApplication::translate("main", "Setting the encoding of the output text. \n"
@@ -32,17 +32,17 @@ int main(int argc, char *argv[])
 
         parser.addOption(encodingOption);
 
-	parser.addPositionalArgument("source", QCoreApplication::translate("main", "Full path to *.1CD file."));
+        parser.addPositionalArgument("source", QCoreApplication::translate("main", "Full path to *.1CD file."));
 
-	parser.process(app);
+        parser.process(app);
 
-	const QStringList args = parser.positionalArguments();
+        const QStringList args = parser.positionalArguments();
 
-	bool jsonFormat = parser.isSet(jsonOption);
+        bool jsonFormat = parser.isSet(jsonOption);
 
-	if (args.isEmpty()) {
-		parser.showHelp(-100);
-	}
+        if (args.isEmpty()) {
+                parser.showHelp(-100);
+        }
 
         QTextStream cerr(stderr);
 
@@ -51,13 +51,13 @@ int main(int argc, char *argv[])
                 return -200;
         }
 
-	QString fileName = args.at(0);
+        QString fileName = args.at(0);
 
-	vl::Info1Cd db(fileName);
-	if (!db.readStructureBase()) {
-		cerr << "Error parsing" << endl;
-		return -1;
-	}
+        vl::Info1Cd db(fileName);
+        if (!db.readStructureBase()) {
+                cerr << "Error parsing" << endl;
+                return -1;
+        }
 
         QString enc = parser.value(encodingOption);
 
@@ -73,35 +73,35 @@ int main(int argc, char *argv[])
                 parser.showHelp(-300);
         }
 
-	if (jsonFormat) {
-		QJsonObject jso;
-		jso["ConfigName"] = db.getConfigName();
-		jso["ConfigVersion"] = db.getConfigVersion();
-		jso["Modified"] = db.getIsModified();
-		jso["UpdateNotCompleted"] = db.getUpdateNotCompleted();
-		jso["FormatVersion"] = db.getFormatVersionStr();
-		jso["BlockSize"] = static_cast<int>(db.getBlockSize());
-		jso["TableCount"] = static_cast<int>(db.getTableCount());
-		jso["Locale"] = db.getLocale();
-		jso["FileSize"] = db.getFileSize();
+        if (jsonFormat) {
+                QJsonObject jso;
+                jso["ConfigName"] = db.getConfigName();
+                jso["ConfigVersion"] = db.getConfigVersion();
+                jso["Modified"] = db.getIsModified();
+                jso["UpdateNotCompleted"] = db.getUpdateNotCompleted();
+                jso["FormatVersion"] = db.getFormatVersionStr();
+                jso["BlockSize"] = static_cast<int>(db.getBlockSize());
+                jso["TableCount"] = static_cast<int>(db.getTableCount());
+                jso["Locale"] = db.getLocale();
+                jso["FileSize"] = db.getFileSize();
 
-		QJsonDocument jsd(jso);
-		cout << QString::fromUtf8(jsd.toJson()) << endl;
+                QJsonDocument jsd(jso);
+                cout << QString::fromUtf8(jsd.toJson()) << endl;
 
-	} else {
-		QString isModified = db.getIsModified() ? "yes" : "no";
-		QString updateIsCompleted = db.getUpdateNotCompleted() ? "yes" : "no";
+        } else {
+                QString isModified = db.getIsModified() ? "yes" : "no";
+                QString updateIsCompleted = db.getUpdateNotCompleted() ? "yes" : "no";
 
-		cout << "ConfigName: " << db.getConfigName() << endl;
-		cout << "ConfigVersion: " << db.getConfigVersion() << endl;
-		cout << "Modified: " << isModified << endl;
-		cout << "UpdateNotCompleted: " << updateIsCompleted << endl;
-		cout << "FormatVersion: " << db.getFormatVersionStr() << endl;
-		cout << "BlockSize: " << db.getBlockSize() << endl;
-		cout << "TableCount: " << db.getTableCount() << endl;
-		cout << "Locale: " << db.getLocale() << endl;
-		cout << "FileSize: " << vl::getFileSizeStr(db.getFileSize(), "Mb", true) << endl;
-	}
+                cout << "ConfigName: " << db.getConfigName() << endl;
+                cout << "ConfigVersion: " << db.getConfigVersion() << endl;
+                cout << "Modified: " << isModified << endl;
+                cout << "UpdateNotCompleted: " << updateIsCompleted << endl;
+                cout << "FormatVersion: " << db.getFormatVersionStr() << endl;
+                cout << "BlockSize: " << db.getBlockSize() << endl;
+                cout << "TableCount: " << db.getTableCount() << endl;
+                cout << "Locale: " << db.getLocale() << endl;
+                cout << "FileSize: " << vl::getFileSizeStr(db.getFileSize(), "Mb", true) << endl;
+        }
 
-	return 0;
+        return 0;
 }
